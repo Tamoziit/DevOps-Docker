@@ -1,0 +1,42 @@
+**AIM: To set up a workflow, to initialize an express server inside a docker container, instead of  a local system.
+
+**WORKFLOW
+--> Set up a custom docker image
+--> Migrate all the source into Default Docker Node image and base this on our custom image.
+--> Install all the dependencies required for the server (like express) in the custom image --> The final product will have our express server running independently inside a docker container.
+
+**KEY POINTS
+--> Docker image is build in layers --> every command inside a Docker file is treated as a separate layer. --> Docker caches the result of every layer after executing it.
+
+#Inside the Docker file -->
+
+FROM node:19 //pulls node:19 image from Docker hub
+WORKDIR /app  //sets the working directory to /app of Node:19 image
+COPY package.json . //copies package.json to the current working dir. ie., /app
+RUN npm install //installs all the dependencies --> build time cmd
+COPY . ./ //copies all the source code files (including already copied package.json) of the root directory of the Dockerfile, into the workdir of the image, ie, /app, expect the file specified in .dockerignore file
+EXPOSE 3000 //exposing or listening to port 3000 (But this line is basically for documentation purposes & doesn't actully connect the server to port 3000 on its own)
+CMD ["node", "index.js"] //running "node index.js" command in runtime
+
+Now note --> Although we are copying each file of the source directory in the working directory at the last layer, including package.json --> yet we are copying it in a separate layer (layer no. 3) --> this is a step of Micro-optimization -->
+While building an application in a practical scenario, we seldom change the dependencies of the package.json file during feature addiing or other fixes. --> Docker caches all the layers during its executing --> Hence if we are caching the package.json layer separately then, that means we do not need to install all the dpendencies once again at each docker build (since, if one layer is rebuild due to changes not found in caches, all layers below it are re-executed) -->
+Hence caching the package.json in a separate layer, which is seldom changed in production, the dependencies layer need not be reinstalled --> THUS SPEEDING UP DOCKER BUILD PROCESS --> Changes happen only at the last layer during fixing a bbug in production.
+
+NB: Inside docker file --> Specifying env variables -->
+ENV PORT 3000
+EXPOSE $PORT
+
+
+
+**DOCKER CMDs
+--> docker build -t <name> . --> building a docker image by providing reference (path) to the docker file (here the current directory or .). -t flag specifies the name of a docker image.
+
+--> docker run -v{pwd}:/app:ro -v /app/node_modules -p 3000:3000 -d --name <container-name> <image-name>
+ --> Runs a docker image inside a container with name as <container-name>, in detached mode (so that command line is still active, instead of docker-cli). -p 3000:3000 signifies that, any traffic coming to port 3000 of our local machine(:3000), is forwarded to the node container build at port 3000 of the machine(3000:) [-p <port of container>:<port from where traffic comees into the container>] --> Without the port flag, due to security restrictions of the docker containers, the container will not be able to interact with the local system outside the container.
+-v ${pwd}:/app:ro --> passing a bind-mount volume to sync the local folders of the present working directory(pwd) to the working directory of the docker image (/app) --> So that whenever a change is made in the source code, those changes are automatically relayed to the docker container, without having to rebuild the image. :ro specifies the Ops inside docker container to happen in "read-only" mode, i.e., no file can be added or deleted from the local system using a docker container. Nevertheless, files can be added or deleted from the container via local system using bind mount.
+-v /app/node_modules --> this volume specifies the bind-mount vol. to not overwrite the node_modules folder inside docker container, so that even if it is removed from the source file, it is not removed from docker container & hence doesn't crash the system.
+
+--> docker exec -it <container-name> bash --> cd into the file system of docker container
+
+--> docker run -v ${pwd}:/app:ro -v /app/node_modules --env PORT=4000 -p 3000:4000 -d --name express-server devops-docker --> running a docker container "express-server" by passing an env variable.
+--> docker run -v ${pwd}:/app:ro -v /app/node_modules --env PORT=4000 -p 3000:4000 -d --name express-server devops-docker --> running a docker container "express-server" by passing .env file.
