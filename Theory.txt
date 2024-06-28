@@ -40,3 +40,11 @@ EXPOSE $PORT
 
 --> docker run -v ${pwd}:/app:ro -v /app/node_modules --env PORT=4000 -p 3000:4000 -d --name express-server devops-docker --> running a docker container "express-server" by passing an env variable.
 --> docker run -v ${pwd}:/app:ro -v /app/node_modules --env PORT=4000 -p 3000:4000 -d --name express-server devops-docker --> running a docker container "express-server" by passing .env file.
+|
+|
+---> *All these run cmds can be composed into a docker compose file.
+
+--> docker-compose up --> composes a docker container.
+--> docker-compose up -d --build --> composes a docker container in detached mode with a forced build command, even if the image already exists.
+--> docker-compose down --> deletes a docker container.
+--> docker-compose down -v --> deletes a docker container along with all the unnecessay/anonymous volumes created during container build.

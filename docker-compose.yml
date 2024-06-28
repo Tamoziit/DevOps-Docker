@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  express-server: #container name
+    build: . #building the currentDir
+    ports: #exposing port
+      - "3000:3000"
+    volumes: #defining volumes
+      - ./:/app:ro #bind mount
+      - /app/node_modules #ignoring overwrite of node_modules
+    environment:
+      - PORT=3000 #passing env variable
+    #passing .env file
+    #env_file:
+    #  - ./.env
