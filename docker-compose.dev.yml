@@ -1,0 +1,14 @@
+#Composing for development environment
+version: "3.8"
+services:
+  express-server:
+    build:
+      context: . #ref/location/context of Dockerfile
+      args:
+        NODE_ENV: development
+    volumes:
+      - ./:/app:ro
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev

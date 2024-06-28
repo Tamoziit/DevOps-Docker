@@ -26,6 +26,13 @@ NB: Inside docker file --> Specifying env variables -->
 ENV PORT 3000
 EXPOSE $PORT
 
+ARG NODE_ENV --> Argument passed in RUN command
+RUN if [ "$NODE_ENV" = "development" ]; \
+        then npm install; \
+        else npm install --only=production; \
+        fi 
+        --> This statement checks if it is development environment. If yes then it runs npm install along with Dev Dependencies(nodemon), otherwise, ie, in production it install everything ecept dev dependencies (like nodemon).
+
 
 
 **DOCKER CMDs
