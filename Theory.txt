@@ -55,3 +55,4 @@ RUN if [ "$NODE_ENV" = "development" ]; \
 --> docker-compose up -d --build --> composes a docker container in detached mode with a forced build command, even if the image already exists.
 --> docker-compose down --> deletes a docker container.
 --> docker-compose down -v --> deletes a docker container along with all the unnecessay/anonymous volumes created during container build.
+--> docker exec -it <mongo-image-name> -u "<mongo-username>" -p "<mongo-password>" --> enters mongo-cli.

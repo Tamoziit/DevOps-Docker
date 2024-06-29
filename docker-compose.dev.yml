@@ -11,4 +11,12 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
+      - MONGO_USER=Tamoziit
+      - MONGO_PASSWORD=tamojitdas2605
     command: npm run dev
+
+  mongo: #DB image
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=Tamoziit
+      - MONGO_INITDB_ROOT_PASSWORD=tamojitdas2605

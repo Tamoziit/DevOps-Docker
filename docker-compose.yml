@@ -1,9 +1,21 @@
 #Shared Config
 version: "3.8"
 services:
-  express-server:
+  express-server: #server image
     build: .
     ports:
       - "3000:3000"
     environment:
       - PORT=3000
+
+  mongo: #DB image
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=Tamoziit
+      - MONGO_INITDB_ROOT_PASSWORD=tamojitdas2605
+    volumes:
+      - mongo-db:/data/db #name:path --> to persist data in a named vol.
+
+#named volumes declarations
+volumes:
+  mongo-db:
