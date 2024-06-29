@@ -1,8 +1,18 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const session = require("express-session");
+
+const redis = require("redis");
+let RedisStore = require("connect-redis")(session)
+let redisClient = redis.createClient({
+
+})
+
 const { MONGO_USER, MONGO_PASSWORD, MONGO_IP, MONGO_PORT } = require("./config/config");
 const postRouter = require("./routes/postRoutes");
+const userRouter = require("./routes/userRoutes");
+
 
 dotenv.config();
 const app = express();
@@ -28,6 +38,7 @@ app.get("/", (req, res) => {
     res.send("<h1>Hello from Docker-Node.js!!</h2>");
 });
 app.use("/api/v1/posts", postRouter);
+app.use("/api/v1/users", userRouter);
 
 app.listen(PORT, () => {
     console.log(`Listening on Port: ${PORT}`);
