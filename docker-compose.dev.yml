@@ -13,10 +13,10 @@ services:
       - NODE_ENV=development
       - MONGO_USER=Tamoziit
       - MONGO_PASSWORD=tamojitdas2605
+      - SESSION_SECRET=secretsecret
     command: npm run dev
 
   mongo: #DB image
-    image: mongo:latest
     environment:
       - MONGO_INITDB_ROOT_USERNAME=Tamoziit
       - MONGO_INITDB_ROOT_PASSWORD=tamojitdas2605
