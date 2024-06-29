@@ -7,6 +7,8 @@ services:
       - "3000:3000"
     environment:
       - PORT=3000
+    depends_on:
+      - mongo #spins up mongo container first, so that the express server container can connect to active db & not crash
 
   mongo: #DB image
     image: mongo:latest

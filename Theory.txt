@@ -56,3 +56,5 @@ RUN if [ "$NODE_ENV" = "development" ]; \
 --> docker-compose down --> deletes a docker container.
 --> docker-compose down -v --> deletes a docker container along with all the unnecessay/anonymous volumes created during container build.
 --> docker exec -it <mongo-image-name> -u "<mongo-username>" -p "<mongo-password>" --> enters mongo-cli.
+--> docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d express-server --> Spins up the express-server image. But if it depends on any other image (here, depends_on: - mongo) --> then it will spin up that container first.
+--> docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --no-deps express-server --> Spins up the express-server image without spinning up its dependencies. Even if it depends on any other image (here, depends_on: - mongo) --> it will not spin up that container first.

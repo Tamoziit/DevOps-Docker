@@ -5,15 +5,19 @@ const { MONGO_USER, MONGO_PASSWORD, MONGO_IP, MONGO_PORT } = require("./config/c
 
 dotenv.config();
 const app = express();
-
 const mongoURI = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_IP}:${MONGO_PORT}/?authSource=admin`; //mongodb://username:password@mongoIP_or_auto reference to mongoImg:default_port/?authSource=admin
-mongoose.connect(mongoURI)
+
+const connectWithRetry = () => {
+    mongoose.connect(mongoURI)
     .then(() => {
         console.log("Connected to MongoDB");
     })
     .catch((e) => {
         console.log(e);
+        setTimeout(connectWithRetry, 5000); //If not connected --> wait for 5secs --> then again try to connect
     })
+}
+connectWithRetry();
 
 const PORT = process.env.PORT || 3000;
 
