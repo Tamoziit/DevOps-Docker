@@ -8,7 +8,7 @@ const postRouter = require("./routes/postRoutes");
 const userRouter = require("./routes/userRoutes");
 
 const redis = require("redis");
-const RedisStore = require("connect-redis").default;
+const RedisStore = require("connect-redis").default; //Redis class
 const redisClient = redis.createClient({
     url: `redis://${REDIS_URL}:${REDIS_PORT}`
 });
@@ -36,15 +36,16 @@ redisClient.on('error', (err) => console.log('Redis Client Error', err));
 
 (async () => {
     await redisClient.connect();
+    console.log("Connected to RedisDB");
 })();
 
 app.use(session({
     store: new RedisStore({ client: redisClient }),
     secret: SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
     cookie: {
         secure: false,
+        resave: false,
+        saveUninitialized: false,
         httpOnly: true,
         maxAge: 30000
     }
@@ -54,7 +55,7 @@ app.use(session({
 const PORT = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {
-    res.send("<h1>Hello from Docker-Node.js!!</h2>");
+    res.send("<h1>Hellooooo from Docker-Node.js!!</h2>");
 });
 app.use("/api/v1/posts", postRouter);
 app.use("/api/v1/users", userRouter);
