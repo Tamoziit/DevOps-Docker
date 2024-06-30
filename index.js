@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const session = require("express-session");
+const cors = require("cors");
 
 const { MONGO_USER, MONGO_PASSWORD, MONGO_IP, MONGO_PORT, REDIS_URL, REDIS_PORT, SESSION_SECRET } = require("./config/config");
 const postRouter = require("./routes/postRoutes");
@@ -33,12 +34,14 @@ connectWithRetry();
 
 //Redis init
 redisClient.on('error', (err) => console.log('Redis Client Error', err));
-
 (async () => {
     await redisClient.connect();
     console.log("Connected to RedisDB");
 })();
 
+//Middlewares
+app.enable("trust proxy"); //Enables the server to listen to all proxy requests from NGINX IPs
+app.use(cors({})); //default CORS settings
 app.use(session({
     store: new RedisStore({ client: redisClient }),
     secret: SESSION_SECRET,
@@ -54,8 +57,9 @@ app.use(session({
 
 const PORT = process.env.PORT || 3000;
 
-app.get("/", (req, res) => {
+app.get("/api/v1", (req, res) => {
     res.send("<h1>Hellooooo from Docker-Node.js!!</h2>");
+    console.log("Running Successfully")
 });
 app.use("/api/v1/posts", postRouter);
 app.use("/api/v1/users", userRouter);

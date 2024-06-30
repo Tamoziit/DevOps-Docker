@@ -1,6 +1,10 @@
 #Composing for development environment
 version: "3.8"
 services:
+  nginx: #NGINX image
+    ports: 
+      - "3000:80"
+
   express-server:
     build:
       context: . #ref/location/context of Dockerfile

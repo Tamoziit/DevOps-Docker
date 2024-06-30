@@ -1,10 +1,15 @@
 #Shared Config
 version: "3.8"
 services:
+  nginx: #NGINX image
+    image: nginx:stable-alpine
+    ports: 
+      - "3000:80" #server_port:NGINX_port
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro #mapping nginx default.conf file of source code into nginx container (bind mount syncing)
+
   express-server: #server image
     build: .
-    ports:
-      - "3000:3000"
     environment:
       - PORT=3000
     depends_on:

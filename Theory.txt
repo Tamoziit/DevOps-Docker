@@ -58,3 +58,13 @@ RUN if [ "$NODE_ENV" = "development" ]; \
 --> docker exec -it <mongo-image-name> -u "<mongo-username>" -p "<mongo-password>" --> enters mongo-cli.
 --> docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d express-server --> Spins up the express-server image. But if it depends on any other image (here, depends_on: - mongo) --> then it will spin up that container first.
 --> docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --no-deps express-server --> Spins up the express-server image without spinning up its dependencies. Even if it depends on any other image (here, depends_on: - mongo) --> it will not spin up that container first.
+--> docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --scale express-server=2 --> Scales up the service to create 2 node instances.
+--> docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build -V --> -V flag discards all anonymous volumes that are previously up & running, & builds up new volumes with newly installed dependencies (if any).
+
+
+**SCALING WITH NGINX
+--> To scale the application, we introduce multiple node instances/to connect to our single MongoDB.
+--> These instances are connected using a load-balancer - NGINX.
+--> We receive request from user at any port on our local machine (like 3000).
+--> This request if forwarded to port 80: default port of NGINX.
+--> This inccoming request is relayed to a node instance on the port the server is listening on --> the request is then forwarded to MongoDb port(27017).
