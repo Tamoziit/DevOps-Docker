@@ -10,6 +10,7 @@ services:
 
   express-server: #server image
     build: .
+    image: insanelytamojit/devops_docker #image pushed to dockerhub
     environment:
       - PORT=3000
     depends_on:

@@ -60,6 +60,7 @@ RUN if [ "$NODE_ENV" = "development" ]; \
 --> docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --no-deps express-server --> Spins up the express-server image without spinning up its dependencies. Even if it depends on any other image (here, depends_on: - mongo) --> it will not spin up that container first.
 --> docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --scale express-server=2 --> Scales up the service to create 2 node instances.
 --> docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build -V --> -V flag discards all anonymous volumes that are previously up & running, & builds up new volumes with newly installed dependencies (if any).
+--> docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --force-recreate --no-deps express-server --> forcibly rebuilds a specific image without rebuilding its dependency images.
 
 
 **SCALING WITH NGINX
@@ -68,3 +69,7 @@ RUN if [ "$NODE_ENV" = "development" ]; \
 --> We receive request from user at any port on our local machine (like 3000).
 --> This request if forwarded to port 80: default port of NGINX.
 --> This inccoming request is relayed to a node instance on the port the server is listening on --> the request is then forwarded to MongoDb port(27017).
+
+
+**PRODUCTION WORKFLOW TO TRACK CODE CHANGES
+Changes made on local dev server & build the changes --> push newly built node to DOCKERHUB --> pull new node images in remote server --> Run Docker Compose up & rebuild just the server.
