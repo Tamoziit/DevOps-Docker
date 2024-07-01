@@ -61,6 +61,7 @@ RUN if [ "$NODE_ENV" = "development" ]; \
 --> docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --scale express-server=2 --> Scales up the service to create 2 node instances.
 --> docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build -V --> -V flag discards all anonymous volumes that are previously up & running, & builds up new volumes with newly installed dependencies (if any).
 --> docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --force-recreate --no-deps express-server --> forcibly rebuilds a specific image without rebuilding its dependency images.
+--> docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --> build only for custom images.
 
 
 **SCALING WITH NGINX
