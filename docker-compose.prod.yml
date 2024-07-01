@@ -6,6 +6,14 @@ services:
       - "80:80"
 
   express-server:
+    deploy: #Docker Swarm config
+      replicas: 8 #8 instances of the express-server
+      restart_policy: #restarting containers after potential crash
+        condition: any
+      update_config:
+        parallelism: 2 #If we have 8 containers of an image in total, then we are updating 2 at a time. The others will be updated, only when the prev. 2 have been updated, hence the whole application doesn't spin down at once
+        delay: 15s #Delay b/w 2 parallel updates
+        
     build:
       context: . #ref/location/context of Dockerfile
       args:

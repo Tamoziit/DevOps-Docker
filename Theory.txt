@@ -73,5 +73,15 @@ RUN if [ "$NODE_ENV" = "development" ]; \
 
 
 **PRODUCTION WORKFLOW TO TRACK CODE CHANGES
-Changes made on local dev server & build the changes --> push newly built node to DOCKERHUB --> pull new node images in remote server --> Run Docker Compose up & rebuild just the server.
+--> Changes made on local dev server & build the changes --> push newly built node to DOCKERHUB --> pull new node images in remote server --> Run Docker Compose up & rebuild just the server.
+--> docker-compose -f docker-compose.yml -f docker-compose.prod.yml push express-server --> push changes in image "express-server" to DockerHub.
+
 --> Pulling & rebuilding images at server side automatically (automation) --> *Docker Watchtower* --> It is a Docker container that handles the automation of other containers.
+--> docker run -d --name watchtower -e WATCHTOWER_TRACE=true -e WATCHTOWER_DEBUG=true -e WATCHTOWER_POLL_INTERVAL=50 -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower app-express-server-1 --> creates a watch tower to automatically check for changes after each 50s, in app-express-server-1 container & pull the changes if any.
+
+--> Container Orchestrator : *Docker Swarm* --> While spinning down an image or spinning up an image at the server using docker-compose, We may experience a service crash or outage for heavy applications --> This is essentially handled by container orchestrators (like kubernetes, docker swarm) --> Then don't spin down the whole working server containers, while making changes in the new containers. --> In addition, unlike docker-compose, docker swarm can orchestrate multiple servers/node-instances, each of which are known "node".
+--> A docker swarm node is of 2 types :
+1. Manager Node - handles the orchestration of the containers.
+2. Worker Node - carries out operations assigned to it by manager nodes.
+[NB: A manager node is simultaneously both manager & worker node, by default]
+--> A docker swarm while spinning up new updated containers, doesn't spin down the old ones, hence preventing outage of service during continuous deployment of updates (ROLLING UPDATES).
