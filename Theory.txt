@@ -74,3 +74,4 @@ RUN if [ "$NODE_ENV" = "development" ]; \
 
 **PRODUCTION WORKFLOW TO TRACK CODE CHANGES
 Changes made on local dev server & build the changes --> push newly built node to DOCKERHUB --> pull new node images in remote server --> Run Docker Compose up & rebuild just the server.
+--> Pulling & rebuilding images at server side automatically (automation) --> *Docker Watchtower* --> It is a Docker container that handles the automation of other containers.
