@@ -85,3 +85,5 @@ RUN if [ "$NODE_ENV" = "development" ]; \
 2. Worker Node - carries out operations assigned to it by manager nodes.
 [NB: A manager node is simultaneously both manager & worker node, by default]
 --> A docker swarm while spinning up new updated containers, doesn't spin down the old ones, hence preventing outage of service during continuous deployment of updates (ROLLING UPDATES).
+--> docker stack deploy -c docker-compose.yml -c docker-compose.prod.yml express_server --> deploys the changes made to containers via swarm in a stack (here = "express_server").
+--> docker stack services express_server --> equivalent to docker ps --> lists out all running services of a stack
